@@ -1,4 +1,2 @@
 # django-simple-social-network
-# django-simple-social-network
-# django-simple-social-network
-# django-simple-social-network
+# its a fun project
