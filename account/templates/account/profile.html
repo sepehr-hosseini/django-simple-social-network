@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2 class="text-center">{{ user.username }}</h2>
+    {% if request.user.id == user.id %}
+         <a href="{% url 'home:post_create' %}" class="btn btn-danger">new post</a>
+    {% endif %}
+
+    {% if request.user.id != user.id %}
+        {% if is_following == False %}
+            <a  id="follow-btn" class="btn btn-primary" href="#">Follow</a>
+            {% else %}
+            <a class="btn btn-primary" href="{% url 'account:user_unfollow' user.id  %}">unFollow</a>
+            {% endif %}
+    {% endif %}
+    <script>
+    $(document).ready(function () {
+    $("p").show()
+    $("#follow-btn").click(function () {
+         $("#follow-btn").text().replace("Follow", "UnFollow");
+        $.get("{% url 'account:user_follow' user.id %}",function (data,status) {
+
+
+
+        })
+
+
+        })
+       })
+
+    </script>
+
+    {% for post in posts %}
+        <a class="card-body" href="{{ post.get_absolute_path }}">{{ post.body }}</a>
+    {% endfor %}
+
+{% endblock %}

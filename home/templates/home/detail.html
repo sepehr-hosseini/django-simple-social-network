@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+ {% if request.user.id == post.user.id %}
+    <a href="{% url 'home:post_delete' post.id %}" class="btn btn-danger">delete</a>
+    <a href="{% url 'home:post_update' post.id %}" class="btn btn-primary">update</a>
+    {% endif %}
+
+    <div class="card">
+        <h4 class="card-title"><a href="{% url 'account:profile' post.user.id %}">{{ post.user}}</a>
+            {{ post.updated|date:'y m d   h' }}</h4>
+    <h3 class="card-text">{{ post.body }}</h3>
+
+    </div>
+    <form method="post" action=" {% if liked %}{% url 'home:post_unlike' post.id  %} {% else %}{% url 'home:post_like' post.id %}{%endif %}">
+     {% csrf_token%}
+    <button  type="submit" class="btn bg-dark text-white">{{ post.like_count }}</button>
+    </form>
+
+
+    <hr>
+    {% if request.user.is_authenticated %}
+        <div>
+        <form action="", method="post">
+
+            {% csrf_token%}
+            {{ form.as_p }}
+            <input type="submit" value="submit">
+
+        </form>
+        </div>
+
+    {% else %}
+        <p>u cant comment!</p>
+
+    {% endif %}
+    <hr>
+    {% for comment in comments %}
+        <div class="card bg-dark text-white">
+        <div class="card-header">
+            {{ comment.user }} | {{ comment.created|timesince}} ago
+
+        </div>
+        <div class="card-body">
+            <p>{{ comment.body }}</p>
+        </div>
+            {% with replies=comment.creply.all %}
+               {% for reply in replies %}
+                   <div class="bg-primary p-3 m-2">
+                    <p>{{ reply.user }}</p>
+                    <p>{{ reply.body}}</p>
+                   </div>
+
+
+              {% endfor %}
+            {% endwith %}
+
+
+
+        </div>
+    {% empty %}
+        <p>no comments yet!</p>
+    {% endfor%}
+
+
+{% endblock %}
